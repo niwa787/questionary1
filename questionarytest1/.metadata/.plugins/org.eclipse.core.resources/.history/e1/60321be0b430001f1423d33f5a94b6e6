@@ -1,0 +1,45 @@
+package com.boostmytool.beststore.controllers;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class PttCrawlerController {
+
+    @GetMapping("/crawl")
+    public String crawlPtt(@RequestParam int startIndex, @RequestParam int endIndex, Model model) {
+        List<String> titles = new ArrayList<>();
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            String url = "https://www.ptt.cc/bbs/Gossiping/index" + i + ".html";
+            try {
+                Document doc = Jsoup.connect(url)
+                        .cookie("over18", "1")
+                        .get();
+
+                Elements articles = doc.select(".r-ent");
+                for (Element article : articles) {
+                    String title = article.select(".title a").text();
+                    if (title.contains("問卦")) {
+                        titles.add(title);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        model.addAttribute("titles", titles);
+        return "crawlResult"; // 確保模板名稱為 crawlResult.html
+    }
+}

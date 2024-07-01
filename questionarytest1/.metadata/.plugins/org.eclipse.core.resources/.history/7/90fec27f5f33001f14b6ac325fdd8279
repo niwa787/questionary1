@@ -1,0 +1,59 @@
+package com.boostmytool.beststore.controllers;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+public class PttCrawlerController {
+
+    // 定義一個 POST 請求處理方法，當發送到 "/crawl" 路徑時執行
+    @PostMapping("/crawl")
+    public String crawlPtt(Model model) {
+        // 定義要爬取的頁面範圍
+        int startIndex = 39365;
+        int endIndex = 39369;
+        // 用於存儲爬取到的標題
+        List<String> titles = new ArrayList<>();
+
+        // 循環遍歷每個頁面索引
+        for (int i = startIndex; i <= endIndex; i++) {
+            // 構建每個頁面的 URL
+            String url = "https://ptt-info.tw/bbs/Gossiping/index" + i + ".html";
+            try {
+                // 使用 JSoup 連接到該 URL 並設置 cookie 以通過年齡驗證
+                Document doc = Jsoup.connect(url)
+                        .cookie("over18", "1")  // 設置 cookie 過濾 18 歲以下內容
+                        .get();  // 獲取網頁文檔
+
+                // 選擇所有帶有 ".r-ent" 類的元素，這些元素代表文章
+                Elements articles = doc.select(".r-ent");
+                // 遍歷所有選擇到的文章元素
+                for (Element article : articles) {
+                    // 獲取每個文章元素中的標題
+                    String title = article.select(".title a").text();
+                    // 如果標題包含 "問卦"，將其添加到標題列表中
+                    if (title.contains("問卦")) {
+                        titles.add(title);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();  // 捕獲並打印 IO 異常
+            }
+        }
+
+        // 將爬取到的標題列表添加到模型中，以便在視圖中顯示
+        model.addAttribute("titles", titles);
+        // 返回包含爬蟲結果的模板名稱
+        return "crawlResult";
+    }
+}

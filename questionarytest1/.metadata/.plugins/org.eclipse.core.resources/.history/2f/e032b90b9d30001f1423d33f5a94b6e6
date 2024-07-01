@@ -1,0 +1,27 @@
+package com.boostmytool.beststore.services;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.boostmytool.beststore.models.Admin;
+
+@Service
+public class AdminService {
+
+    @Autowired
+    private AdminRepository adminRepository;
+    
+    public Optional<Admin> findByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
+    
+    public void save(Admin admin) {
+        adminRepository.save(admin);
+    }
+    
+//    public Admin findByEmail(String email) {
+//        return adminRepository.findByEmail(email).orElse(null);
+//    }
+}

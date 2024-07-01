@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>爬蟲結果</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Lora", serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .list-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .list-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .snowflake {
+            position: fixed;
+            top: 0;
+            font-size: 24px;
+            pointer-events: none;
+            animation: fall 10s linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">爬蟲結果</h2>
+    <ul id="titlesList">
+        <li th:each="title : ${titles}" th:text="${title}" class="list-item"></li>
+    </ul>
+    <a class="btn btn-secondary mt-3" href="/">返回首頁</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const listItems = document.querySelectorAll('.list-item');
+
+        listItems.forEach((listItem, index) => {
+            setTimeout(() => {
+                listItem.classList.add('visible');
+            }, index * 200); // 每個項目的延遲時間
+        });
+
+        // 複製文字並顯示在頁面上
+        listItems.forEach(listItem => {
+            const clone = listItem.cloneNode(true);
+            clone.classList.remove('list-item', 'visible');
+            document.body.appendChild(clone);
+            clone.style.position = 'absolute';
+            clone.style.left = `${Math.random() * 100}vw`;
+            clone.style.top = `${Math.random() * 100}vh`;
+        });
+
+        // 添加雪花特效
+        const createSnowflake = () => {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = '❄';
+            snowflake.style.left = `${Math.random() * 100}vw`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 7}s`; // 雪花下落速度
+            snowflake.style.fontSize = `${Math.random() * 10 + 10}px`; // 雪花大小
+            document.body.appendChild(snowflake);
+            
+            // 雪花移除
+            setTimeout(() => {
+                snowflake.remove();
+            }, 10000);
+        };
+
+        setInterval(createSnowflake, 200);
+    });
+</script>
+</body>
+</html>

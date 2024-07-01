@@ -1,0 +1,5 @@
+package com.boostmytool.beststore.services;
+
+public class AdminService {
+
+}

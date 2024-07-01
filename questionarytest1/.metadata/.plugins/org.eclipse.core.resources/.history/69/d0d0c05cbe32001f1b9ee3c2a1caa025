@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>多選題</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		*{
+			font-size:30px;
+		}
+		
+		
+		.cd{
+			display:flex;
+			margin-left: 200px;
+			color:black;
+			font-weight: bold;
+			font-size: 30px;
+			margin-bottom: 100px;
+			padding-bottom: -40px;
+		}
+		.form-label-lg{
+			align-self: end;
+		}
+		.form-check-label {
+		    margin-right: 20px;
+		    font-weight: bold; 
+		}
+		.form-check-input{
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center my-4">作答</h1>
+    <form th:action="@{/user/submitMultipleChoiceAnswer}" method="post">
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label class="form-label">題目:</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" class="form-control" th:value="${product.name}" disabled>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label class="form-label">題目類型:</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" class="form-control" th:value="${product.category}" disabled>
+            </div>
+        </div>
+       
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label class="form-label">問題敘述:</label>
+            </div>
+            <div class="col-md-10">
+                <textarea class="form-control" rows="3" readonly th:text="${product.brand}" disabled></textarea>
+            </div>
+        </div>
+		<div class="mb-3">
+				        <div class="ab">
+				            <label class="form-label form-label-lg">答案:</label>
+							<div class=cd>
+				            <div class="form-check">
+				                <input class="form-check-input" type="checkbox" value="A" name="answers" id="optionA">
+				                <label class="form-check-label" for="optionA">選項一</label>
+				            </div>
+				            <div class="form-check">
+				                <input class="form-check-input" type="checkbox" value="B" name="answers" id="optionB">
+				                <label class="form-check-label" for="optionB">選項二</label>
+				            </div>
+				            <div class="form-check">
+				                <input class="form-check-input" type="checkbox" value="C" name="answers" id="optionC">
+				                <label class="form-check-label" for="optionC">選項三</label>
+				            </div>
+				            <div class="form-check">
+				                <input class="form-check-input" type="checkbox" value="D" name="answers" id="optionD">
+				                <label class="form-check-label" for="optionD">選項四</label>
+				            </div>
+				            <div class="form-check">
+				                <input class="form-check-input" type="checkbox" value="E" name="answers" id="optionE">
+				                <label class="form-check-label" for="optionE">選項五</label>
+				            </div>
+							</div>
+				        </div>
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label class="form-label">狀態:</label>
+            </div>
+            <div class="col-md-10">
+                <input type="text" class="form-control" th:value="${product.status}" disabled>
+            </div>
+        </div>
+		<div class="row mb-3">
+		    <div class="col-md-2">
+		        <label class="form-label">圖片:</label>
+		    </div>
+		    <div class="col-md-4">
+		        <img th:src="@{'/images/' + ${product.imageFileName}}" class="img-fluid">
+		    </div>
+		    
+		    </div>
+    </form>
+	<div class="row">
+				            <div class="col text-center">
+				                <button type="submit" class="btn btn-primary">Submit</button>
+				                <a class="btn btn-outline-primary" href="/user" role="button">取消</a>
+				            </div>
+				        </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

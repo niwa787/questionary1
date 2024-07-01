@@ -1,0 +1,36 @@
+package com.boostmytool.beststore.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.boostmytool.beststore.models.Admin;
+import com.boostmytool.beststore.services.AdminRepository;
+
+
+
+@Controller
+public class AuthController {
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null && admin.getPassword().equals(password) && admin.getRole().equals("ADMIN")) {
+            return "redirect:/products";
+        } else {
+            model.addAttribute("error", "Invalid email or password.");
+            return "login";
+        }
+    }
+}

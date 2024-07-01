@@ -1,0 +1,38 @@
+package com.boostmytool.beststore.services;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.boostmytool.beststore.models.Product;
+
+@Service
+public class ProductsService {
+
+    @Autowired
+    private ProductsRepository productsRepository;
+
+    public Page<Product> findAll(Pageable pageable) {
+        return productsRepository.findAll(pageable);
+    }
+
+    public Page<Product> search(String keyword, Pageable pageable) {
+        return productsRepository.findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(keyword, keyword, pageable);
+    }
+
+    public Product findById(Integer id) {
+        Optional<Product> result = productsRepository.findById(id);
+        return result.orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+    
+    public Page<Product> search1(String keyword, Pageable pageable) {
+        return productsRepository.findByKeywordContainingIgnoreCase(keyword, pageable);
+    }
+    public Page<Product> findByCreatedAtBetween(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return productsRepository.findByCreatedAtBetween(startDate, endDate, pageable);
+    }
+}

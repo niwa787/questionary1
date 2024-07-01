@@ -1,0 +1,60 @@
+package com.boostmytool.beststore.models;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class PttCrawler {
+
+    public static void main(String[] args) {
+        // 設定要抓取的頁面範圍
+        int startIndex = 39354;
+        int endIndex = 39364;
+
+        // MySQL 連接設定
+        String jdbcUrl = "jdbc:mysql://localhost:3306/test1";
+        String username = "root";
+        String password = "root";
+
+        try {
+            Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
+            String insertSQL = "INSERT INTO tt1 (title) VALUES (?)";
+            PreparedStatement pstmt = conn.prepareStatement(insertSQL);
+
+            for (int i = startIndex; i <= endIndex; i++) {
+                String url = "https://www.ptt.cc/bbs/Gossiping/index" + i + ".html";
+                try {
+                    // 設定Cookie以繞過18歲認證
+                    Document doc = Jsoup.connect(url)
+                            .cookie("over18", "1")
+                            .get();
+
+                    Elements articles = doc.select(".r-ent");
+
+                    for (Element article : articles) {
+                        String title = article.select(".title a").text();
+                        if (title.contains("問卦")) {
+                            // 將標題插入資料庫
+                            pstmt.setString(1, title);
+                            pstmt.executeUpdate();
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

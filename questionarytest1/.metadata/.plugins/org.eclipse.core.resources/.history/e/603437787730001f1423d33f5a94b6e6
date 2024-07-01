@@ -1,0 +1,10 @@
+package com.boostmytool.beststore.services;
+
+import org.apache.catalina.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.boostmytool.beststore.models.Admin;
+
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+    User findByEmail(String email);
+}

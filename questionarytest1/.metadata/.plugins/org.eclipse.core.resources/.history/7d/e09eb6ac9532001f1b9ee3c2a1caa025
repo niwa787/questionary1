@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>多選題統計</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    
+    <style>
+        * {
+            font-family: "Lora", serif;
+        }
+		.outer{
+			display: flex;
+		 justify-content: center;
+		align-items: center;
+		height: 100vh;
+				
+		}
+        .container {
+            text-align: center;
+			justify-content: center;
+            
+			border: 2px solid gray;
+        }
+        .stats-table {
+            margin-top: 20px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stats-table th, .stats-table td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        .stats-table th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+	<div class= "outer">
+<div class="container">
+    <h1>多選題統計</h1>
+    <h2 th:text="${product.name}"></h2>
+    <h2 th:text="${product.brand}"></h2>
+    <ul id="answerList" style="display: none;">
+        <li th:each="answer : ${answers}" th:text="${answer.answers}"></li>
+    </ul>
+    <div id="myPieChart" style="width: 600px; height: 400px; margin: 0 auto;"></div>
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>選項</th>
+                <th>百分比</th>
+            </tr>
+        </thead>
+        <tbody id="statsTableBody"></tbody>
+    </table>
+    <a href="/products" class="btn btn-primary mt-3">返回</a>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取答案列表的 HTML 元素
+        const answerList = document.getElementById('answerList');
+        // 获取所有列表项（每个答案）
+        const listItems = answerList.getElementsByTagName('li');
+        // 初始化每个选项的计数器
+        const answerCounts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+
+        // 统计每个选项的次数
+        for (let item of listItems) {
+            // 将每个答案字符串拆分为单个字符数组
+            const answers = item.textContent.trim().split('');
+            // 对每个选项字符进行计数
+            answers.forEach(answer => {
+                const trimmedAnswer = answer.trim();
+                if (trimmedAnswer in answerCounts) {
+                    answerCounts[trimmedAnswer]++;
+                }
+            });
+        }
+
+        // 计算总次数
+        const totalCount = Object.values(answerCounts).reduce((a, b) => a + b, 0);
+
+        // 准备图表数据
+        const labels = Object.keys(answerCounts);
+        const data = labels.map(label => {
+            return { value: answerCounts[label], name: label };
+        });
+
+        // 初始化 ECharts 图表
+        const chartDom = document.getElementById('myPieChart');
+        const myChart = echarts.init(chartDom);
+        const option = {
+            title: {
+                text: '多選題統計',
+                subtext: '調查結果',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: '回答',
+                    type: 'pie',
+                    radius: '50%',
+                    data: data,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表
+        myChart.setOption(option);
+
+        // 准备统计表数据
+        const statsTableBody = document.getElementById('statsTableBody');
+        labels.forEach(label => {
+            // 计算每个选项的百分比
+            const percentage = totalCount === 0 ? 0 : ((answerCounts[label] / totalCount) * 100).toFixed(2);
+            // 创建一个表格行
+            const row = document.createElement('tr');
+            // 设置行的 HTML 内容
+            row.innerHTML = `<td>${label}</td><td>${percentage}%</td>`;
+            // 将行添加到表格主体中
+            statsTableBody.appendChild(row);
+        });
+    });
+</script>
+</body>
+</html>

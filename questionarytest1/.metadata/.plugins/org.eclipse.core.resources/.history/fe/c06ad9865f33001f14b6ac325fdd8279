@@ -1,0 +1,64 @@
+package com.boostmytool.beststore.models;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class PttCrawler {
+
+    public static void main(String[] args) {
+        // 設定要抓取的頁面範圍
+        int startIndex = 39354;
+        int endIndex = 39364;
+
+        // MySQL 連接設定
+        String jdbcUrl = "jdbc:mysql://localhost:3306/test1";
+        String username = "root";
+        String password = "root";
+
+        try {
+            // 建立與MySQL數據庫的連接
+            Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
+            String insertSQL = "INSERT INTO ttt (title) VALUES (?)"; // 插入數據的SQL語句
+            PreparedStatement pstmt = conn.prepareStatement(insertSQL); // 預處理的SQL語句
+
+            // 循環處理每個頁面
+            for (int i = startIndex; i <= endIndex; i++) {
+                String url = "https://www.ptt.cc/bbs/Gossiping/index" + i + ".html"; // 構造頁面的URL
+                try {
+                    // 設定Cookie以繞過18歲認證
+                    Document doc = Jsoup.connect(url)
+                            .cookie("over18", "1") // 設置Cookie以繞過18歲認證
+                            .get(); // 取得頁面文檔
+
+                    Elements articles = doc.select(".r-ent"); // 選擇包含文章的元素
+
+                    // 處理每篇文章
+                    for (Element article : articles) {
+                        String title = article.select(".title a").text(); // 取得文章標題
+                        if (title.contains("問卦")) { // 檢查標題是否包含"問卦"
+                            // 將標題插入資料庫
+                            pstmt.setString(1, title); // 設置SQL語句中的參數
+                            pstmt.executeUpdate(); // 執行插入操作
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace(); // 捕捉並打印IO異常
+                }
+            }
+
+            // 關閉PreparedStatement和Connection
+            pstmt.close(); // 關閉預處理語句
+            conn.close(); // 關閉數據庫連接
+        } catch (SQLException e) {
+            e.printStackTrace(); // 捕捉並打印SQL異常
+        }
+    }
+}

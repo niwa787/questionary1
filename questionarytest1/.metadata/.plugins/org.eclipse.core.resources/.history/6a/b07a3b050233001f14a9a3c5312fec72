@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>簡答題統計</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 100vh;
+            border: 1px solid #000; 
+            padding: 20px;
+            box-sizing: border-box; 
+        }
+        #random-text-box {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: hidden;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .word {
+            position: absolute;
+            font-size: 20px;
+        }
+		.mid{
+			display:flex;
+		}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">簡答題統計</h1>
+    <div class="mid">
+		<ul>
+	        <li th:each="answer : ${answers}" th:text="${answer.answer}"></li>
+	    </ul>
+	
+    <div id="random-text-box">
+        <span th:each="answer : ${answers}" th:text="${answer.answer}" class="word"></span>
+    </div>
+	</div>
+    <div class="text-center mt-3">
+        <a href="/user" class="btn btn-primary">返回</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('random-text-box');
+        const answers = Array.from(container.querySelectorAll('.word')).map(node => node.textContent.trim()).filter(text => text.length > 0);
+
+        // 計算每個答案出現的次數
+        const wordCounts = answers.reduce((acc, answer) => {
+            acc[answer] = (acc[answer] || 0) + 1;
+            return acc;
+        }, {});
+
+        //將結果順序打亂
+        const wordList = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
+        for (let i = wordList.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [wordList[i], wordList[j]] = [wordList[j], wordList[i]];
+        }
+
+        // 清空容器
+        container.innerHTML = '';
+
+        // 随机位置、大小和颜色
+        const maxFontSize = 50;
+        wordList.forEach(({ word, count }) => {
+            // 创建新的 div 元素用於顯示
+            const wordElement = document.createElement('div');
+            wordElement.className = 'word';
+            wordElement.textContent = word;
+
+            // 计算並設置字體大小
+            wordElement.style.fontSize = `${10 + (count * maxFontSize / Math.max(...Object.values(wordCounts)))}px`;
+
+            // 設置隨機位置
+            wordElement.style.left = Math.random() * (container.offsetWidth - 100) + 'px';
+            wordElement.style.top = Math.random() * (container.offsetHeight - 30) + 'px';
+
+            // 设置隨機顏色
+            wordElement.style.color = getRandomColor();
+
+            // 将元素添加到容器中
+            container.appendChild(wordElement);
+        });
+    });
+    // 生成隨機顏色
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+</script>
+</body>
+</html>

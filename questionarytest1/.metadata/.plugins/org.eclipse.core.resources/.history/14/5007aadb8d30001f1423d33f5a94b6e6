@@ -1,0 +1,37 @@
+package com.boostmytool.beststore.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.boostmytool.beststore.models.Admin;
+import com.boostmytool.beststore.services.AdminRepository;
+
+
+
+@Controller
+public class AuthController {
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login"; // 確保這裡的路徑是正確的
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null && admin.getPassword().equals(password) && "1".equals(admin.getRole())) {
+        	 model.addAttribute("message", "登入成功，正在跳轉...");
+            return "products/index"; // 確保這裡的路徑是正確的
+        } else {
+            model.addAttribute("error", "Invalid email or password.");
+            return "products/login"; // 確保這裡的路徑是正確的
+        }
+    }
+}

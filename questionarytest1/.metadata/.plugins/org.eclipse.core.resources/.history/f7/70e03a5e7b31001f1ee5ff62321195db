@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>簡答題統計</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <Style>
+		.container {
+			margin-top: 200px;
+			margin-left: 500px;
+			height: 100vh;
+		}
+	</Style>
+</head>
+<body>
+<div class="container">
+    <h1>簡答題統計</h1>
+    <h2 th:text="${product.name}"></h2>
+    <ul>
+        <li th:each="answer : ${answers}" th:text="${answer.answer}"></li>
+    </ul>
+    <a href="/user" class="btn btn-primary">返回</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
