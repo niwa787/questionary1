@@ -35,7 +35,7 @@
 
 
 
-建立問題(日期有設管制)
+建立問題
 ![image](https://github.com/user-attachments/assets/b749dd1d-fd00-4119-a454-f158b9b5135d)
 
 
