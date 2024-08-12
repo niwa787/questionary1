@@ -1,5 +1,12 @@
 # questionary1
  問卷
+開啟方式<br>
+透過spring 架構開啟<br>
+![image](https://github.com/user-attachments/assets/797bcf90-8eb5-4b77-af65-fedb997d820d)
+使用maven依賴 JDK版本11<br>
+![image](https://github.com/user-attachments/assets/5e260313-65be-4f85-b2d3-63eb3d92c20f)
+
+<hr>
 動態問卷總攬<br>
 1.封面<br>
 2.話題頁面(爬蟲 Jsoup)<br>
