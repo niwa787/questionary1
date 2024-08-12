@@ -17,13 +17,6 @@
 ![image](https://github.com/user-attachments/assets/3c710a0f-c2e3-40ff-baac-d078b86277e1)
 ![image](https://github.com/user-attachments/assets/33f9f418-17ba-451e-8993-21e97e681e94)
 
-
-
-
-
-
-
-<hr>
 4.管理者介面(登入、註冊、創造問題、編輯問題、看統計資料(單選、多選、簡答)、模糊搜尋、分頁)
 ![image](https://github.com/user-attachments/assets/97109c00-33b5-4473-9339-a2cf2895937d)
 ![image](https://github.com/user-attachments/assets/cb176489-025d-44fb-be1c-866ffdbcfd79)
