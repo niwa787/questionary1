@@ -4,11 +4,10 @@
 1.封面<br>
 2.話題頁面(爬蟲 Jsoup)<br>
 3.使用者頁面(Thymeleaf模板引擎)<br>
-4.管理者頁面<br>
-
-<hr>
+4.管理者頁面<hr>
 1.封面(管理者頁面、使用者頁面、話題精選)
 ![image](https://github.com/user-attachments/assets/40f7dc19-f8ad-46c3-ac7d-6bc15e323369)
+
 2.話題頁面(爬蟲 Jsoup)
 ![image](https://github.com/user-attachments/assets/7195710d-c159-4141-9803-d40204d7a7d2)
 
