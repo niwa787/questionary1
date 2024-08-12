@@ -8,9 +8,7 @@
 
 <hr>
 1.封面(管理者頁面、使用者頁面、話題精選)
-![image](https://github.com/user-attachments/assets/40f7dc19-f8ad-46c3-ac7d-6bc15e323369)
-
-<hr>
+![image](https://github.com/user-attachments/assets/40f7dc19-f8ad-46c3-ac7d-6bc15e323369)<hr>
 2.話題頁面(爬蟲 Jsoup)
 ![image](https://github.com/user-attachments/assets/7195710d-c159-4141-9803-d40204d7a7d2)
 
